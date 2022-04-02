@@ -1,0 +1,27 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+    
+    <div class="row justify-content-center">
+        {% if user.is_authenticated %}      
+        <div class="col-4">   
+            <div class="border border-secondary p-4 rounded mt-3">
+                <h3 class="pb-3">New post</h3>
+                <form action="{% url 'newpost' %}" method="POST">
+                    {% csrf_token %}
+                    {{ form }}
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button type="submit" class="btn btn-light mt-3">Post</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        {% endif %}
+            
+        <div class="col-6 border border-secondary p-4 rounded mt-3">
+            <h3 class="pb-3">All posts</h3>
+            {% include "network/blockpost.html" %}      
+        </div>
+    </div>
+
+{% endblock %}

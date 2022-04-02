@@ -1,0 +1,68 @@
+{% load humanize %}
+{% load static %}
+
+        {% for post in page.object_list %}
+        <div class="border border-light p-4 rounded">
+
+            <div id="post_headline_{{ post.id }}">
+                <a href="{% url 'profile' post.author.id %}">
+                    <strong>{{ post.author }}</strong>
+                </a>
+                <em><small>{{ post.created_at|naturaltime }}</small></em> 
+                {% if user.is_authenticated and user == post.author %}
+                <a class="badge rounded-pill bg-light text-dark" href="javascript:void(0)" data-id="{{ post.id }}" id="edit_{{ post.id }}">Edit</a>
+                {% endif %}
+            </div>
+
+            <div id="post_contentgroup_{{ post.id }}" class="border border-light p-3 rounded mt-3">
+                <p id="post_content_{{ post.id }}">{{ post.content }}</p>
+            </div>
+            
+            <div class="d-grid gap-2 d-md-flex justify-content-center" id="save_buttons_{{ post.id }}">             
+            </div>
+            
+            <div id="post_likes_{{ post.id }}" class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
+                {% if user.is_authenticated %}
+                <i id="post_likeicon_{{ post.id }}" data-id="{{ post.id }}" class="likeicon {% if user in post.liked_by.all %}fa-solid{% else %}fa-regular{% endif %} fa-star"></i>
+                {% else %}
+                <i class="likeicon {% if post.likes != 0 %}fa-solid{% else %}fa-regular{% endif %} fa-star"></i>
+                {% endif %}
+                <span id="post_likecount_{{ post.id }}">{{ post.likes }}</span>
+            </div>
+        </div>
+
+        {% empty %}
+        <div class="row justify-content-center mt-5">
+            No post
+        </div>
+        {% endfor %}
+
+        {% if page.object_list %}
+        <nav aria-label="...">
+            <ul class="pagination justify-content-end mt-4">
+                <li class="page item {% if not page.has_previous %} disabled {% endif %}" >
+                    <a class="page-link pagination" href="{{ previous_url }}" tabindex="-1" aria-disabled="true">Previous</a>
+                </li>
+                {% for n in page.paginator.page_range %}
+
+                    {% if n == page.number %}
+                    <li aria-current="page" class="page-item active">
+                        <span class="page-link" style="border-color: #d87093; background-color: #d87093;">
+                        {{ n }}
+                        <span class="sr-only">(current)</span>
+                        </span>
+                    </li>
+
+                    {% elif n < page.number|add:3 and n > page.number|add:-3 %}
+                    <li class="page-item">
+                        <a class="page-link pagination" href="{{GET_params.urlencode}}?page={{ n }}">{{ n }}</a>
+                    </li>
+                    {% endif %}
+
+                {% endfor %}
+                <li class="page-item {% if not page.has_next %} disabled {% endif %}">
+                    <a class="page-link pagination" href="{{ next_url }}">Next</a>
+                </li>
+            </ul>
+        </nav>
+        {% endif %}

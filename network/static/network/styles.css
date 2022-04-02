@@ -1,0 +1,16 @@
+.likeicon {
+    color: #d87093;
+}
+
+#time {
+    color: pink;
+}
+
+.pagination {
+    color: pink;
+}
+
+.pagination:hover {
+    color: #d87093;
+   
+}
